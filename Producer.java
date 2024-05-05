@@ -19,12 +19,12 @@ class Producer {
             if (i % 10 == 0) {
                 try {
                     System.out.println("Waiting");
-                    Thread.sleep(1000); // Adjust sleep duration to 5 seconds (5000 milliseconds)
+                    Thread.sleep(1000); 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
-        notifyAll(); // Notify waiting threads after producing all messages
+        notifyAll(); 
     }
 }

@@ -11,7 +11,7 @@ class Consumer {
                 try {
                     // Wait until there are messages in the queue
                     System.out.println("Waiting");
-                    wait(5000); // Adjust waiting time to 5 seconds (5000 milliseconds)
+                    wait(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
