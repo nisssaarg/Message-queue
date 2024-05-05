@@ -5,7 +5,7 @@ public class mainES {
     public static void main(String[] args) {
         MessageQueue<String> queue = new MessageQueue<>();
         Producer producer1 = new Producer(queue, 100);
-        Consumer consumer1 = new Consumer(queue);
+        Consumer<String> consumer1 = new Consumer<String>(queue);
         Producer producer2 = new Producer(queue, 200);
         //Consumer consumer2 = new Consumer(queue);
 

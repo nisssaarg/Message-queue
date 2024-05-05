@@ -1,7 +1,7 @@
-class Consumer {
-    private MessageQueue queue;
+class Consumer<T> {
+    private MessageQueue<T> queue;
 
-    public Consumer(MessageQueue queue) {
+    public Consumer(MessageQueue<T> queue) {
         this.queue = queue;
     }
 
