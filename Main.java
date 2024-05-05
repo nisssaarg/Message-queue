@@ -9,5 +9,9 @@ public class Main {
         Thread ProducerThread = new Thread(() -> producer.produce());
 
         ProducerThread.start();
+        Producer producer2 = new Producer(queue, 200);
+        Thread ProducerThread2 = new Thread(() -> producer2.produce());
+        
+        ProducerThread2.start();
     }
 }

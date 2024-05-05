@@ -19,7 +19,7 @@ class Consumer {
 
             // Consume messages while the queue is not empty
             while (queue.front != null) {
-                System.out.println("Consumed " + queue.dequeue());
+                System.out.println("Consumed " + Thread.currentThread().getId() + " " + queue.dequeue());
             }
         }
     }
