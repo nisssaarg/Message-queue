@@ -1,4 +1,4 @@
-class MessageQueue<T>{
+class MessageQueue<T> implements queue<T>{
     public Node<T> front;
     public Node<T> back;
     
@@ -7,6 +7,7 @@ class MessageQueue<T>{
         back = null;
     }
     
+    @Override
     public synchronized void enqueue(T message){
         Node<T> current = new Node<T>(message);
         if(back == null || front == null)
@@ -18,6 +19,7 @@ class MessageQueue<T>{
         notifyAll();
     }
     
+    @Override
     public synchronized T dequeue(){
         if (front == null){ 
             back = null;
