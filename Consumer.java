@@ -12,7 +12,7 @@ class Consumer {
             Object message = queue.dequeue();
             System.out.println(Thread.currentThread().getId() + " finished");
             if (message != null) {
-                System.out.println("Consumbed "+ message + " by "+ number);
+                System.out.println(Thread.currentThread().getId() + "Consumbed "+ message + " by "+ number);
                 //System.out.println("Size after removing: " + queue.size());
             }
         }

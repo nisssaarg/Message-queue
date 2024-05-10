@@ -20,19 +20,19 @@ class MessageQueue<T> implements queue<T> {
         }
         size++;
         // Notify waiting threads that a new message is enqueued
-        notifyAll();
+        notify();
     }
 
     @Override
     public synchronized T dequeue() {
         System.out.println(Thread.currentThread().getId() + " entering dequeue");
         while (front == null) {
-            // Wait if the queue is empty
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.out.println(Thread.currentThread().getId() + " wait exited");
         }
         Node<T> current = front;
         front = front.next;
