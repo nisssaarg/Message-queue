@@ -13,14 +13,15 @@ class Main {
     }
 
     private static void Test3(MessageQueue<String> queue) {
-        Consumer consumer = new Consumer(queue,1);
-        Consumer consumer2 = new Consumer(queue,2);
+        Consumer consumer = new Consumer(queue);
+        Consumer consumer2 = new Consumer(queue);
         Producer producer = new Producer(queue, 5);
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
         executor.submit(() -> consumer.consume());
         executor.submit(() -> consumer2.consume());
         executor.submit(() -> producer.produce());
+        executor.submit(() -> producer.produceInt());
         
 
         executor.shutdown();
@@ -28,7 +29,7 @@ class Main {
 
     public static void Test1(MessageQueue<String> queue) {
         
-        Consumer consumer = new Consumer(queue,1);
+        Consumer consumer = new Consumer(queue);
         Producer producer = new Producer(queue, 100);
 
         ExecutorService executor = Executors.newFixedThreadPool(4);

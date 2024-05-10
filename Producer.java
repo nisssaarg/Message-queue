@@ -13,14 +13,20 @@ class Producer {
             sb.append("Message");
             sb.append(number);
             sb.append(i);
-            queue.enqueue(sb.toString());
-            System.out.println("Producing "  + sb.toString());
+            queue.enqueue(sb.toString(), MessageType.String);
+           //System.out.println("Producing "  + sb.toString());
             // System.out.println("Size after adding: " + queue.size());
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void produceInt(){
+        for(int i = 1 ; i <= number; i++){
+            queue.enqueue(i, MessageType.Integer);
         }
     }
 }
