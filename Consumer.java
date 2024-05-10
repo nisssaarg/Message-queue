@@ -1,24 +1,19 @@
-import java.util.concurrent.CountDownLatch;
-
 class Consumer {
     private MessageQueue queue;
-    private CountDownLatch latch;
+    private int number;
 
-    public Consumer(MessageQueue queue, CountDownLatch latch) {
+    public Consumer(MessageQueue queue,int number) {
         this.queue = queue;
-        this.latch = latch;
+        this.number = number;
     }
 
     public void consume() {
         while (true) {
-            try {
-                latch.await(); // Wait for the latch to count down
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             Object message = queue.dequeue();
+            System.out.println(Thread.currentThread().getId() + " finished");
             if (message != null) {
-                System.out.println(message);
+                System.out.println("Consumbed "+ message + " by "+ number);
+                //System.out.println("Size after removing: " + queue.size());
             }
         }
     }

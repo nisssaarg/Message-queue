@@ -1,34 +1,46 @@
-class MessageQueue<T> implements queue<T>{
-    public Node<T> front;
-    public Node<T> back;
-    
-    public MessageQueue(){
+class MessageQueue<T> implements queue<T> {
+    private Node<T> front;
+    private Node<T> back;
+    private int size;
+
+    public MessageQueue() {
         front = null;
         back = null;
+        size = 0;
     }
-    
+
     @Override
-    public synchronized void enqueue(T message){
-        Node<T> current = new Node<T>(message);
-        if(back == null || front == null)
-                back = front = current;
-        else{
+    public synchronized void enqueue(T message) {
+        Node<T> current = new Node<>(message);
+        if (back == null || front == null)
+            back = front = current;
+        else {
             back.next = current;
             back = current;
         }
+        size++;
+        // Notify waiting threads that a new message is enqueued
         notifyAll();
     }
-    
-    @Override
-    public synchronized T dequeue(){
-        if (front == null){ 
-            back = null;
-            return null;
-        }
-        Node<T> current = (Node<T>)front;
-        front = front.next;
 
-        notifyAll();
-        return current.message;    
+    @Override
+    public synchronized T dequeue() {
+        System.out.println(Thread.currentThread().getId() + " entering dequeue");
+        while (front == null) {
+            // Wait if the queue is empty
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Node<T> current = front;
+        front = front.next;
+        size--;
+        return current.message;
+    }
+
+    public int size() {
+        return size;
     }
 }

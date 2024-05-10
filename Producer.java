@@ -1,14 +1,10 @@
-import java.util.concurrent.CountDownLatch;
-
 class Producer {
     private MessageQueue queue;
     private int number;
-    private CountDownLatch latch;
 
-    public Producer(MessageQueue queue, int number, CountDownLatch latch) {
+    public Producer(MessageQueue queue, int number) {
         this.queue = queue;
         this.number = number;
-        this.latch = latch;
     }
 
     public void produce() {
@@ -19,9 +15,9 @@ class Producer {
             sb.append(i);
             queue.enqueue(sb.toString());
             System.out.println("Producing "  + sb.toString());
-            latch.countDown(); // Signal the latch each time a message is enqueued
+            // System.out.println("Size after adding: " + queue.size());
             try {
-                Thread.sleep(100); // Simulate some delay between producing messages
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
