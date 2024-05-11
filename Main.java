@@ -3,7 +3,7 @@ import java.util.concurrent.Executors;
 
 class Main {
     public static void main(String[] args) {
-        MessageQueue<String> queue = new MessageQueue<String>();
+        MessageQueue queue = new MessageQueue();
         // Initial count of 1
         //Test1(queue);
         //Test2(queue);
@@ -12,7 +12,7 @@ class Main {
         // System.out.println("After" + queue.size());
     }
 
-    private static void Test3(MessageQueue<String> queue) {
+    private static void Test3(MessageQueue queue) {
         Consumer consumer = new Consumer(queue);
         Consumer consumer2 = new Consumer(queue);
         Producer producer = new Producer(queue, 5);
@@ -27,7 +27,7 @@ class Main {
         executor.shutdown();
     }
 
-    public static void Test1(MessageQueue<String> queue) {
+    public static void Test1(MessageQueue queue) {
         
         Consumer consumer = new Consumer(queue);
         Producer producer = new Producer(queue, 100);
@@ -40,7 +40,7 @@ class Main {
         executor.shutdown();
     }
 
-    public static void Test2(MessageQueue<String> queue){
+    public static void Test2(MessageQueue queue){
         Producer producer = new Producer(queue, 200);
         ExecutorService executor = Executors.newFixedThreadPool(2);
         executor.submit(() -> producer.produce());

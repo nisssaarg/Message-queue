@@ -14,7 +14,7 @@ class Producer {
             sb.append(number);
             sb.append(i);
             queue.enqueue(sb.toString(), MessageType.String);
-           //System.out.println("Producing "  + sb.toString());
+            //System.out.println("Producing "  + sb.toString());
             // System.out.println("Size after adding: " + queue.size());
             try {
                 Thread.sleep(100);

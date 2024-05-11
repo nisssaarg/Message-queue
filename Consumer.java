@@ -7,11 +7,9 @@ class Consumer {
 
     public void consume() {
         while (true) {
-            Object message = queue.dequeue();
-            //System.out.println(Thread.currentThread().getId() + " finished");
+            Node message = queue.dequeue();
             if (message != null) {
-                //System.out.println(Thread.currentThread().getId() + " Consumed "+ message );
-                //System.out.println("Size after removing: " + queue.size());
+                message.getMessageType().process(message);
             }
         }
     }

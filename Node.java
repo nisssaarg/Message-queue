@@ -8,4 +8,8 @@ class Node<T>{
         this.type = type;
         next = null;
     }
+
+    public MessageType getMessageType(){
+        return type;
+    }
 }
