@@ -11,7 +11,7 @@ class MessageQueue<T> implements queue<T> {
 
     @Override
     public synchronized void enqueue(T message, MessageType type) {
-        Node current = new Node(message,type);
+        Node<T> current = new Node<T>(message,type);
         if (back == null || front == null)
             back = front = current;
         else {

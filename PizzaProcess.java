@@ -1,7 +1,7 @@
-public class PizzaProcess implements MessageProcess {
+public class PizzaProcess<T> implements MessageProcess<T> {
 
     @Override
-    public void process(Node message) {
+    public void process(Node<T> message) {
         System.out.println("Pizza Method processed" + message.message);
     }
 

@@ -1,7 +1,7 @@
-public class  MilkProcess implements MessageProcess {
+public class  MilkProcess<T> implements MessageProcess<T> {
 
     @Override
-    public void process(Node message) {
+    public void process(Node<T> message) {
         System.out.println(" Milk processed " + message.message);
     }
 
