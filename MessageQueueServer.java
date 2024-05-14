@@ -4,7 +4,7 @@ import java.util.concurrent.*;
 
 class MessageQueueServer {
     private static final int PORT = 8080;
-    private static final MessageQueue<String> queue = new MessageQueue<>();
+    private static final MessageQueue<Node<String>> queue = new MessageQueue<>();
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
@@ -12,9 +12,13 @@ class MessageQueueServer {
             ExecutorService executor = Executors.newCachedThreadPool();
 
             while (true) {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Accepted connection from " + clientSocket.getInetAddress());
-                executor.execute(new ClientHandler(clientSocket));
+                try {
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("Accepted connection from " + clientSocket.getInetAddress());
+                    executor.execute(new ClientHandler(clientSocket));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -30,19 +34,24 @@ class MessageQueueServer {
 
         @Override
         public void run() {
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream())) {
 
                 while (true) {
-                    String command = in.readLine();
-                    if (command == null) {
-                        break; // Client disconnected
+                    String command;
+                    try {
+                        command = (String) in.readObject();
+                        if (command == null) {
+                            break; // Client disconnected
+                        }
+                    } catch (EOFException e) {
+                        System.out.println("Client disconnected");
+                        break;
                     }
 
-                    processCommand(command, out);
+                    processCommand(command, in, out);
                 }
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             } finally {
                 try {
@@ -53,26 +62,26 @@ class MessageQueueServer {
             }
         }
 
-        private void processCommand(String command, PrintWriter out) {
-            String[] parts = command.split(" ");
-            switch (parts[0]) {
+        private void processCommand(String command, ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
+            switch (command) {
                 case "enqueue":
-                    queue.enqueue(parts[1], MessageType.valueOf(parts[2]));
-                    out.println("OK");
+                    Node<?> node = (Node<?>) in.readObject();
+                    queue.enqueue(node);
+                    out.writeObject("OK");
                     break;
                 case "dequeue":
-                    Node<String> message = queue.dequeue();
+                    Node<?> message = queue.dequeue();
                     if (message != null) {
-                        out.println("NODE " + message.message+" "+message.getMessageType());
+                        out.writeObject(message);
                     } else {
-                        out.println("EMPTY");
+                        out.writeObject("EMPTY");
                     }
                     break;
                 case "size":
-                    out.println("SIZE " + queue.size());
+                    out.writeObject("SIZE " + queue.size());
                     break;
                 default:
-                    out.println("INVALID");
+                    out.writeObject("INVALID");
             }
         }
     }

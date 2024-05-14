@@ -1,8 +1,10 @@
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 class Producer {
-    private static final String SERVER_ADDRESS = "localhost"; // Replace with the server IP address if needed
+    private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 8080;
 
     private int number;
@@ -12,42 +14,61 @@ class Producer {
     }
 
     public void produce() {
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+        for (int i = 1; i <= number; i++) {
+            boolean messageSent = false;
+            while (!messageSent) {
+                try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+                     ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                     ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-            for (int i = 1; i <= number; i++) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Message");
-                sb.append(number);
-                sb.append(i);
+                    String message = "Message" + number + i;
+                    Node<String> node = new Node<>(message, MessageType.Milk);
 
-                String message = sb.toString();
-                out.println("enqueue " + message + " " + MessageType.Milk);
-                String response = in.readLine();
-                System.out.println("Server response: " + response);
+                    out.writeObject("enqueue");
+                    out.writeObject(node);
+                    String response = (String) in.readObject();
+                    System.out.println("Server response: " + response);
 
-                Thread.sleep(1000);
+                    messageSent = true;
+                    Thread.sleep(1000);
+                } catch (IOException | InterruptedException | ClassNotFoundException e) {
+                    System.out.println("Error occurred, retrying...");
+                    try {
+                        Thread.sleep(1000); // Wait before retrying
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
             }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
     public void produceInt() {
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+        for (int i = 1; i <= number; i++) {
+            boolean messageSent = false;
+            while (!messageSent) {
+                try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+                     ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                     ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-            for (int i = 1; i <= number; i++) {
-                out.println("enqueue " + i + " " + MessageType.Pizza);
-                String response = in.readLine();
-                System.out.println("Server response: " + response);
+                    Node<Integer> node = new Node<>(i, MessageType.Pizza);
 
-                Thread.sleep(1000);
+                    out.writeObject("enqueue");
+                    out.writeObject(node);
+                    String response = (String) in.readObject();
+                    System.out.println("Server response: " + response);
+
+                    messageSent = true;
+                    Thread.sleep(1000);
+                } catch (IOException | InterruptedException | ClassNotFoundException e) {
+                    System.out.println("Error occurred, retrying...");
+                    try {
+                        Thread.sleep(1000); // Wait before retrying
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
             }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

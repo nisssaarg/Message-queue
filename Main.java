@@ -33,14 +33,7 @@ class Main {
         Producer producer = new Producer(20);
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
-        executor.submit(() -> {
-            try {
-                consumer.consume();
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        });
+        executor.submit(() -> consumer.consume());
         executor.submit(() -> producer.produce());
         executor.submit(() -> producer.produceInt());
 

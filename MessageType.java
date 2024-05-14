@@ -1,5 +1,9 @@
-public enum MessageType {
+import java.io.Serializable;
+
+public enum MessageType implements Serializable {
     Milk,
-    Pizza
+    Pizza;
+
+    private static final long serialVersionUID = 1L;
 }
 

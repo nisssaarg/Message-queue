@@ -10,8 +10,7 @@ class MessageQueue<T> implements queue<T> {
     }
 
     @Override
-    public synchronized void enqueue(T message, MessageType type) {
-        Node<T> current = new Node<T>(message,type);
+    public synchronized void enqueue(Node  current) {
         if (back == null || front == null)
             back = front = current;
         else {
@@ -19,7 +18,7 @@ class MessageQueue<T> implements queue<T> {
             back = current;
         }
         size++;
-        System.out.println(Thread.currentThread().getId() + " Enqueued "  +" Message " + message);
+        System.out.println(Thread.currentThread().getId() + " Enqueued "  +" Message " + current.message);
         // Notify waiting threads that a new message is enqueued
         notify();
     }
