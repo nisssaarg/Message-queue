@@ -64,7 +64,7 @@ class MessageQueueServer {
 
         private void processCommand(String command, ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
             switch (command) {
-                case "enqueue":
+                case "Enqueue":
                     Node<?> node = (Node<?>) in.readObject();
                     queue.enqueue(node);
                     out.writeObject("OK");

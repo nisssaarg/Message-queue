@@ -34,8 +34,8 @@ class Main {
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
         executor.submit(() -> consumer.consume());
-        executor.submit(() -> producer.produce());
         executor.submit(() -> producer.produceInt());
+        executor.submit(() -> producer.produce());
 
         
 
